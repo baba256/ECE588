@@ -5,3 +5,5 @@ http://mc.stanford.edu/cgi-bin/images/b/ba/M02_2.pdf
 https://github.com/sparkfiresprairie/capl
 
 https://devblogs.nvidia.com/parallelforall/easy-introduction-cuda-c-and-c/
+
+How does renderer work? => https://www.howtogeek.com/122274/how-do-the-cpu-and-gpu-interact-to-render-computer-graphics/
