@@ -9,3 +9,17 @@
 
 #include "cudaRenderer.h"
 #include "image.h"
+
+struct globals_const{
+    SceneName sceneName;
+
+    int numCircles;
+    float* position;
+    float* velocity;
+    float* color;
+    float* radius;
+
+    int imageWidth;
+    int imageHeight;
+    float* imageData;	
+}
