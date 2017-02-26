@@ -37,7 +37,7 @@ int main(int argc, char** argv)
 		return 1;
 	}
 	
-	printf("Rendering to %d x %d image\n", imageSize, imageSize);
+	printf("Rendering to yo oo %d x %d image\n", imageSize, imageSize);
 	
 
 	Render_circle* cuda_render;
@@ -47,7 +47,7 @@ int main(int argc, char** argv)
    cuda_render->allocImageBuf(imageSize, imageSize);
    cuda_render->loadScene(sceneName);
 
-   cuda_render->clearImage();
+   //cuda_render->clearImage();
    cuda_render->setup();
 	
 	return 0;
