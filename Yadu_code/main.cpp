@@ -7,15 +7,15 @@
 
 int main(int argc, char** argv)
 {
-	int benchMarkStart = -1;
-	int benchMarkEnd  = -1;
-	int imageSize = 768;
+	int benchMarkStart 	= -1;
+	int benchMarkEnd  	= -1;
+	int imageSize 		= 768;
 	
-	std::string sceneNameStr;
-	SceneName sceneName;
+	std::string 	sceneNameStr;
+	SceneName 		sceneName;
 	
 	if (optind >= argc) {
-        fprintf(stderr, "Error: missing scene name\n");
+        printf(stderr, "Error: missing scene name\n");
         usage(argv[0]);
         return 1;
     }

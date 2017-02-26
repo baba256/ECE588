@@ -1,5 +1,3 @@
-
-
 #include "render_circle.h"
 
 class Cuda_renderer : public render_circle{
