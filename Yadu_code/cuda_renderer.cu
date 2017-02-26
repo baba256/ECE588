@@ -60,7 +60,7 @@ __global__ void kernelClearImageSnowflake(){
 	*(float4*)(&cuConstParams.imgData[offset]) = value;
 }
 
-Cuda_renderer::Cuda_renderer() {
+cuda_renderer::cuda_renderer() {
     image = NULL;
 
     numCircles = 0;
@@ -77,7 +77,7 @@ Cuda_renderer::Cuda_renderer() {
 }
 
 //Allocating buffer memory to the image.
-void Cuda_renderer::allocImageBuf(int width, int height){
+void cuda_renderer::allocImageBuf(int width, int height){
 		
 		if(image){
 			delete image;
@@ -118,7 +118,7 @@ static void genRandomCircle(  int 		numCircles,
 }
 
 //Loading the scene
-void Cuda_renderer::loadScene(SceneName scene){
+void cuda_renderer::loadScene(SceneName scene){
 	sceneName = scene;
 	
 	if(sceneName == SNOWFLAKES){
@@ -138,7 +138,7 @@ void Cuda_renderer::loadScene(SceneName scene){
 }
 
 //Clearing image for the renderer
-void Cuda_renderer::clearImage(){
+void cuda_renderer::clearImage(){
 	
 	//256 threads per blockDim
 	dim3 blockDim(16,16,1);
