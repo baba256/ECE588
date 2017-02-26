@@ -1,6 +1,6 @@
 #include "render_circle.h"
 
-class Cuda_renderer : public render_circle{
+class Cuda_renderer : public render_circle {
 	
 private:
 
@@ -34,4 +34,4 @@ public:
 						   float pixelx, float pixely,
 						   float p_x,float p_y, float p_z,
 						   float* pixelData);
-}
+};

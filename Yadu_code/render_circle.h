@@ -12,11 +12,11 @@ public:
 	
 	virtual void image_setup() = 0;
 	
-	virtual void allocOutputImage(int width, int height) = 0;
+	void allocImageBuf(int width, int height);
 	
 	virtual void loadScene(SceneName name) = 0;
 	
 	virtual void clearImage() = 0;
 	
 	virtual void render() = 0;
-}
+};

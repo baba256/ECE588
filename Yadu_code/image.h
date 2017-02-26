@@ -14,4 +14,4 @@ struct Image{
 		 int numPixels = width * height;
 		 
 	}
-}
+};

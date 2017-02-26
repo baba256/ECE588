@@ -11,7 +11,17 @@
 #include "cuda_renderer.h"
 #include "image.h"
 
-struct globals_const{
+
+// randomFloat --
+// //
+// // return a random floating point value between 0 and 1
+static float
+randomFloat() {
+    return static_cast<float>(rand()) / RAND_MAX;
+}
+
+
+struct globals_const {
     SceneName sceneName;
 
     int 	numCircles;
@@ -24,6 +34,7 @@ struct globals_const{
     int 	imgHeight;
     float* 	imgData;	
 };
+
 
 //constants for GPU to access
 __constant__ globals_const cuConstParams;
@@ -72,8 +83,8 @@ void Cuda_renderer::allocImageBuf(int width, int height){
 			delete image;
 		}
 		image = new Image(width,height);
-}
 
+}
 static void genRandomCircle(  int 		numCircles,
 							  float*	position,
 							  float*	velocity,
@@ -112,7 +123,7 @@ void Cuda_renderer::loadScene(SceneName scene){
 	
 	if(sceneName == SNOWFLAKES){
 		//Write an algorithm
-	} elseif (sceneName == CIRCLE_Rand){
+	} else if (sceneName == CIRCLE_Rand){
 		numCircles 	= 10 * 1000;
 		
 		position 	= new float[3 * numCircles];
@@ -137,7 +148,7 @@ void Cuda_renderer::clearImage(){
 	);
 	
 	if(sceneName == SNOWFLAKES){
-		kernelClearImageSnowflake<<gridDim, blockDim>>();
+		kernelClearImageSnowflake<<<gridDim, blockDim>>>();
 	}else{
 		//KernelClearImage call
 	}
