@@ -15,8 +15,7 @@
 // randomFloat --
 // //
 // // return a random floating point value between 0 and 1
-static float
-randomFloat() {
+static float randomFloat() {
     return static_cast<float>(rand()) / RAND_MAX;
 }
 
@@ -99,10 +98,7 @@ Cuda_renderer::Cuda_renderer() {
 
 
 const Image*
-Cuda_renderer::image_setup() {  //Check Check Check
-	// need to copy contents of the rendered image from device memory
-	    // before we expose the Image object to the caller
-
+Cuda_renderer::image_setup() {  
 	    printf("Copying image data from device\n");
 
 	    cudaMemcpy(image->data,
@@ -111,7 +107,7 @@ Cuda_renderer::image_setup() {  //Check Check Check
 	               cudaMemcpyDeviceToHost);
 
 	    return image;
-	}
+}
 
 //Allocating buffer memory to the image.
 void Cuda_renderer::allocImageBuf(int width, int height){
@@ -132,7 +128,46 @@ void Cuda_renderer::render() {
     //cudaDeviceSynchronize();
 }
 
-void Cuda_renderer::setup() {}
+void Cuda_renderer::setup(){
+	
+	int deviceCount = 0;
+	cudaError_t err = cudaGetDeviceCount(&deviceCount);
+	
+	printf("Initializing CUDA for CudaRenderer\n");
+	printf("Found %d Cuda devices\n",deviceCount);
+	
+	for(int i=0,i<deviceCount;i++){
+		cudaDeviceProp deviceProps;
+		cudaGetDeviceProperties (&deviceProps,i);
+		printf("Device %d: %s\n", i, deviceProps.name);
+        printf("   SMs:        %d\n", deviceProps.multiProcessorCount);
+        printf("   Global mem: %.0f MB\n", static_cast<float>(deviceProps.totalGlobalMem) / (1024 * 1024));
+	}
+
+    cudaMalloc(&cudaDevicePosition	, sizeof(float) * 3 * numCircles);
+    cudaMalloc(&cudaDeviceVelocity	, sizeof(float) * 3 * numCircles);
+    cudaMalloc(&cudaDeviceColor		, sizeof(float) * 3 * numCircles);
+    cudaMalloc(&cudaDeviceRadius	, sizeof(float) * numCircles);
+    cudaMalloc(&cudaDeviceImageData	, sizeof(float) * 4 * image->width * image->height);
+
+    cudaMemcpy(cudaDevicePosition , position, sizeof(float) * 3 * numCircles, cudaMemcpyHostToDevice);
+    cudaMemcpy(cudaDeviceVelocity , velocity, sizeof(float) * 3 * numCircles, cudaMemcpyHostToDevice);
+    cudaMemcpy(cudaDeviceColor	  , color	, sizeof(float) * 3 * numCircles, cudaMemcpyHostToDevice);
+    cudaMemcpy(cudaDeviceRadius   , radius	, sizeof(float) * numCircles	, cudaMemcpyHostToDevice);	
+	
+	globals_const params;
+    params.sceneName 	= sceneName;
+    params.numCircles 	= numCircles;
+    params.imageWidth 	= image->width;
+    params.imageHeight 	= image->height;
+    params.position 	= cudaDevicePosition;
+    params.velocity 	= cudaDeviceVelocity;
+    params.color 		= cudaDeviceColor;
+    params.radius 		= cudaDeviceRadius;
+    params.imageData 	= cudaDeviceImageData;	
+	
+	cudaMemcpyHostToSymbol(cuConstParams, &params, sizeof(globals_const);
+}
 void pixel_shader() {}
 
 static void genRandomCircle(  int 		numCircles,
