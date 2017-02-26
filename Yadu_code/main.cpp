@@ -36,7 +36,7 @@ int main(int argc, char** argv)
 		return 1;
 	}
 	
-	printf("Rendering to %dx%d image\n", imageSize, imageSize);
+	printf("Rendering to %d x %d image\n", imageSize, imageSize);
 	
 
 	render_circle* cuda_render;
