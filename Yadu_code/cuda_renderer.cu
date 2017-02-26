@@ -78,7 +78,9 @@ __global__ void kernelClearImage(float r, float g, float b, float a) {
     *(float4*)(&cuConstParams.imgData[offset]) = value;
 }
 
-cuda_renderer::cuda_renderer() {
+
+
+Cuda_renderer::Cuda_renderer() {
 
     image = NULL;
 
@@ -95,14 +97,44 @@ cuda_renderer::cuda_renderer() {
     cudaDeviceImageData = NULL;
 }
 
+
+const Image*
+Cuda_renderer::image_setup() {  //Check Check Check
+	// need to copy contents of the rendered image from device memory
+	    // before we expose the Image object to the caller
+
+	    printf("Copying image data from device\n");
+
+	    cudaMemcpy(image->data,
+	               cudaDeviceImageData,
+	               sizeof(float) * 4 * image->width * image->height,
+	               cudaMemcpyDeviceToHost);
+
+	    return image;
+	}
+
 //Allocating buffer memory to the image.
-void cuda_renderer::allocImageBuf(int width, int height){
+void Cuda_renderer::allocImageBuf(int width, int height){
 		
 		if(image){
 			delete image;
 		}
 		image = new Image(width,height);
 }
+
+void Cuda_renderer::render() {
+    // 256 threads per block is a healthy number
+   // dim3 blockDim(TPB_X, TPB_Y, 1);
+   // dim3 gridDim(
+    //    (image->width + PPB_X - 1) / PPB_X,
+    //    (image->height + PPB_Y - 1) / PPB_Y);
+   // kernelRenderCircles<<<gridDim, blockDim>>>();
+    //cudaDeviceSynchronize();
+}
+
+void Cuda_renderer::setup() {}
+void pixel_shader() {}
+
 static void genRandomCircle(  int 		numCircles,
 							  float*	position,
 							  float*	velocity,
@@ -136,7 +168,7 @@ static void genRandomCircle(  int 		numCircles,
 }
 
 //Loading the scene
-void cuda_renderer::loadScene(SceneName scene){
+void Cuda_renderer::loadScene(SceneName scene){
 	sceneName = scene;
 	
 	if(sceneName == SNOWFLAKES){
@@ -156,7 +188,7 @@ void cuda_renderer::loadScene(SceneName scene){
 }
 
 //Clearing image for the renderer
-void cuda_renderer::clearImage(){
+void Cuda_renderer::clearImage(){
 	
 	//256 threads per blockDim
 	dim3 blockDim(16,16,1);
