@@ -71,7 +71,7 @@ __global__ void kernelClearImage(float r, float g, float b, float a) {
     if (image_X >= width || image_Y >= height)
         return;
 
-    int offset = 4 * (imageY * width + imageX);
+    int offset = 4 * (image_X * width + image_Y);
     float4 value = make_float4(r, g, b, a);
 
     //Writing it to GPU memory
@@ -151,7 +151,7 @@ void cuda_renderer::loadScene(SceneName scene){
 		
 		genRandomCircle(numCircles, position, velocity, color, radius);
 	} else {
-		printf (stderr,"Error in loading the scene %s\n",sceneName);
+	//	printf (stderr,"Error in loading the scene %s\n",sceneName);
 	}
 }
 
