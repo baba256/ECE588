@@ -180,10 +180,11 @@ void Cuda_renderer::loadScene(SceneName scene){
 		velocity	= new float[3 * numCircles];
 		color		= new float[3 * numCircles];
 		radius		= new float[numCircles];
-		
+
 		genRandomCircle(numCircles, position, velocity, color, radius);
+		printf ("testing \n");
 	} else {
-	//	printf (stderr,"Error in loading the scene %s\n",sceneName);
+		printf ("Error in loading the scene %s\n",sceneName);
 	}
 }
 
