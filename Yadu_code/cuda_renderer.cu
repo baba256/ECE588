@@ -66,13 +66,13 @@ Cuda_renderer::Cuda_renderer() {
 }
 
 //Allocating buffer memory to the image.
-void Cuda_renderer::allocImageBuf(int width, int height{
+void Cuda_renderer::allocImageBuf(int width, int height){
 		
 		if(image){
 			delete image;
 		}
 		image = new Image(width,height);
-)
+}
 
 static void genRandomCircle(  int 		numCircles,
 							  float*	position,
