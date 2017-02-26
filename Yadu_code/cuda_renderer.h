@@ -24,7 +24,7 @@ public:
 		
 		void image_setup();
 		
-		void allocOutputImage(int width, int height);
+		void allocImageBuf(int width, int height);
 		
 		void clearImage();
 		
