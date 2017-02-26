@@ -21,7 +21,7 @@ randomFloat() {
 }
 
 
-struct globals_const {
+struct globals_const{
     SceneName sceneName;
 
     int 	numCircles;
@@ -34,7 +34,6 @@ struct globals_const {
     int 	imgHeight;
     float* 	imgData;	
 };
-
 
 //constants for GPU to access
 __constant__ globals_const cuConstParams;
@@ -80,6 +79,7 @@ __global__ void kernelClearImage(float r, float g, float b, float a) {
 }
 
 cuda_renderer::cuda_renderer() {
+
     image = NULL;
 
     numCircles = 0;
@@ -102,7 +102,6 @@ void cuda_renderer::allocImageBuf(int width, int height){
 			delete image;
 		}
 		image = new Image(width,height);
-
 }
 static void genRandomCircle(  int 		numCircles,
 							  float*	position,
@@ -170,6 +169,7 @@ void cuda_renderer::clearImage(){
 		kernelClearImageSnowflake<<<gridDim, blockDim>>>();
 	}else{
 		//KernelClearImage call
+		kernelClearImage<<<gridDim, blockDim>>>(1.f, 1.f, 1.f, 1.f);
 	}
 	cudaThreadSynchronize();
 }
