@@ -24,8 +24,13 @@ int main(int argc, char** argv)
 	
 	if(sceneNameStr.compare("snow") == 0){
 		sceneName = SNOWFLAKES;
+		
 	} else if (sceneNameStr.compare("rgb") == 0) {
 		sceneName = CIRCLE_RGB;
+		
+	}else if (sceneNameStr.compare("randcircle") == 0){
+		sceneName = CIRCLE_Rand;
+		
 	} else {
 		fprintf(stderr,"Unknown Scene Name (%s) \n",sceneNameStr.c_str());
 		return 1;
