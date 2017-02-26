@@ -60,6 +60,25 @@ __global__ void kernelClearImageSnowflake(){
 	*(float4*)(&cuConstParams.imgData[offset]) = value;
 }
 
+
+__global__ void kernelClearImage(float r, float g, float b, float a) {
+
+    int image_X = blockIdx.x * blockDim.x + threadIdx.x;
+    int image_Y = blockIdx.y * blockDim.y + threadIdx.y;
+
+    int width 	= cuConstParams.imgWidth;
+    int height 	= cuConstParams.imgHeight;
+
+    if (image_X >= width || image_Y >= height)
+        return;
+
+    int offset = 4 * (imageY * width + imageX);
+    float4 value = make_float4(r, g, b, a);
+
+    //Writing it to GPU memory
+    *(float4*)(&cuConstParams.imgData[offset]) = value;
+}
+
 cuda_renderer::cuda_renderer() {
     image = NULL;
 
