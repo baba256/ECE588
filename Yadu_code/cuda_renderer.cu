@@ -9,7 +9,7 @@
 #include <cuda_runtime.h>
 #include <driver_functions.h>
 
-#include "cudaRenderer.h"
+#include "cuda_renderer.h"
 #include "image.h"
 
 struct globals_const{
@@ -24,7 +24,7 @@ struct globals_const{
     int 	imgWidth;
     int 	imgHeight;
     float* 	imgData;	
-}
+};
 
 //constants for GPU to access
 __constant__ globals_const cuConstParams;
@@ -75,26 +75,6 @@ void Cuda_renderer::allocImageBuf(int width, int height{
 		image = new Image(width,height);
 )
 
-//Loading the scene
-void Cuda_renderer::loadScene(SceneName scene){
-	sceneName = scene;
-	
-	if(sceneName == SNOWFLAKES){
-		//Write an algorithm
-	} elseif (sceneName == CIRCLE_Rand){
-		numCircles 	= 10 * 1000;
-		
-		position 	= new float[3 * numCircles];
-		velocity	= new float[3 * numCircles];
-		color		= new float[3 * numCircles];
-		radius		= new float[numCircles];
-		
-		genRandomCircle(numCircles, position, velocity, color, radius);
-	} else {
-		printf (stderr,"Error in loading the scene %s\n",sceneName);
-	}
-}
-
 static void genRandomCircle(  int 		numCircles,
 							  float*	position,
 							  float*	velocity,
@@ -125,6 +105,26 @@ static void genRandomCircle(  int 		numCircles,
 			}
 		}
 								  
+}
+
+//Loading the scene
+void Cuda_renderer::loadScene(SceneName scene){
+	sceneName = scene;
+	
+	if(sceneName == SNOWFLAKES){
+		//Write an algorithm
+	} elseif (sceneName == CIRCLE_Rand){
+		numCircles 	= 10 * 1000;
+		
+		position 	= new float[3 * numCircles];
+		velocity	= new float[3 * numCircles];
+		color		= new float[3 * numCircles];
+		radius		= new float[numCircles];
+		
+		genRandomCircle(numCircles, position, velocity, color, radius);
+	} else {
+		printf (stderr,"Error in loading the scene %s\n",sceneName);
+	}
 }
 
 //Clearing image for the renderer
