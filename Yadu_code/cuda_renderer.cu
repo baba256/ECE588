@@ -72,8 +72,8 @@ void Cuda_renderer::allocImageBuf(int width, int height){
 			delete image;
 		}
 		image = new Image(width,height);
-}
 
+}
 static void genRandomCircle(  int 		numCircles,
 							  float*	position,
 							  float*	velocity,
@@ -112,7 +112,7 @@ void Cuda_renderer::loadScene(SceneName scene){
 	
 	if(sceneName == SNOWFLAKES){
 		//Write an algorithm
-	} elseif (sceneName == CIRCLE_Rand){
+	} else if (sceneName == CIRCLE_Rand){
 		numCircles 	= 10 * 1000;
 		
 		position 	= new float[3 * numCircles];
@@ -137,7 +137,7 @@ void Cuda_renderer::clearImage(){
 	);
 	
 	if(sceneName == SNOWFLAKES){
-		kernelClearImageSnowflake<<gridDim, blockDim>>();
+		kernelClearImageSnowflake<<<gridDim, blockDim>>>();
 	}else{
 		//KernelClearImage call
 	}
