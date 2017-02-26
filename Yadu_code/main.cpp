@@ -7,15 +7,15 @@
 
 int main(int argc, char** argv)
 {
-	int benchMarkStart = -1;
-	int benchMarkEnd  = -1;
-	int imageSize = 768;
+	int benchMarkStart 	= -1;
+	int benchMarkEnd  	= -1;
+	int imageSize 		= 768;
 	
-	std::string sceneNameStr;
-	SceneName sceneName;
+	std::string 	sceneNameStr;
+	SceneName 		sceneName;
 	
 	if (optind >= argc) {
-        fprintf(stderr, "Error: missing scene name\n");
+        printf(stderr, "Error: missing scene name\n");
         usage(argv[0]);
         return 1;
     }
@@ -24,8 +24,13 @@ int main(int argc, char** argv)
 	
 	if(sceneNameStr.compare("snow") == 0){
 		sceneName = SNOWFLAKES;
+		
 	} else if (sceneNameStr.compare("rgb") == 0) {
 		sceneName = CIRCLE_RGB;
+		
+	}else if (sceneNameStr.compare("randcircle") == 0){
+		sceneName = CIRCLE_Rand;
+		
 	} else {
 		fprintf(stderr,"Unknown Scene Name (%s) \n",sceneNameStr.c_str());
 		return 1;

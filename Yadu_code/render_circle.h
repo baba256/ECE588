@@ -3,6 +3,7 @@ struct Image;
 typedef enum {
     CIRCLE_RGB,
     SNOWFLAKES,
+	CIRCLE_Rand
 }SceneName;
 
 class render_circle{

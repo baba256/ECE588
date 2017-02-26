@@ -1,7 +1,7 @@
-//test
 #include <algorithm>
 #include <math.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <vector>
 
 #include <cuda.h>
@@ -11,8 +11,7 @@
 #include "cuda_renderer.h"
 #include "image.h"
 
-struct globals_const {
-
+struct globals_const{
     SceneName sceneName;
 
     int 	numCircles;
@@ -67,21 +66,12 @@ Cuda_renderer::Cuda_renderer() {
 }
 
 //Allocating buffer memory to the image.
-void Cuda_renderer::allocImageBuf(int width, int height{
+void Cuda_renderer::allocImageBuf(int width, int height){
 		
 		if(image){
 			delete image;
 		}
 		image = new Image(width,height);
-)
-
-//Loading the scene
-void Cuda_renderer::loadScene(SceneName scene){
-	sceneName = scene;
-	
-	if(sceneName == SNOWFLAKES){
-		//Write an algorithm
-	}
 }
 
 static void genRandomCircle(  int 		numCircles,
@@ -91,8 +81,49 @@ static void genRandomCircle(  int 		numCircles,
 							  float*	radius){
 
 		srand(0);
-		std::vector<float> depths()
+		std::vector<float> depths(numCircles);
+		for(int i=0;i<numCircles;i++){
+			
+			float depth = depths[i];
+			radius[i]	= 0.2f+ 0.6f * randomFloat();
+			
+			int index3 = 3*i;
+			
+			position[index3]  	= randomFloat();
+			position[index3+1]	= randomFloat();
+			position[index3+2]	= depth;
+			
+			if(numCircles <= 1000){
+				color[index3] 	= .1f + .9f * randomFloat();
+				color[index3+1] = .2f + .5f * randomFloat();
+				color[index3+2] = .5f + .5f * randomFloat();
+			}else{
+				color[index3] 	= .3f + .9f * randomFloat();
+				color[index3+1] = .1f + .9f * randomFloat();
+				color[index3+2] = .1f + .4f * randomFloat();
+			}
+		}
 								  
+}
+
+//Loading the scene
+void Cuda_renderer::loadScene(SceneName scene){
+	sceneName = scene;
+	
+	if(sceneName == SNOWFLAKES){
+		//Write an algorithm
+	} elseif (sceneName == CIRCLE_Rand){
+		numCircles 	= 10 * 1000;
+		
+		position 	= new float[3 * numCircles];
+		velocity	= new float[3 * numCircles];
+		color		= new float[3 * numCircles];
+		radius		= new float[numCircles];
+		
+		genRandomCircle(numCircles, position, velocity, color, radius);
+	} else {
+		printf (stderr,"Error in loading the scene %s\n",sceneName);
+	}
 }
 
 //Clearing image for the renderer
