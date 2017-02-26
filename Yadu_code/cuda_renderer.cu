@@ -11,7 +11,17 @@
 #include "cuda_renderer.h"
 #include "image.h"
 
-struct globals_const{
+
+// randomFloat --
+// //
+// // return a random floating point value between 0 and 1
+static float
+randomFloat() {
+    return static_cast<float>(rand()) / RAND_MAX;
+}
+
+
+struct globals_const {
     SceneName sceneName;
 
     int 	numCircles;
@@ -24,6 +34,7 @@ struct globals_const{
     int 	imgHeight;
     float* 	imgData;	
 };
+
 
 //constants for GPU to access
 __constant__ globals_const cuConstParams;
