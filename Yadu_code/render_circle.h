@@ -19,4 +19,4 @@ public:
 	virtual void clearImage() = 0;
 	
 	virtual void render() = 0;
-}
+};
