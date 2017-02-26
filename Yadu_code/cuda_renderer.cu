@@ -21,7 +21,7 @@ randomFloat() {
 }
 
 
-struct globals_const {
+struct globals_const{
     SceneName sceneName;
 
     int 	numCircles;
@@ -34,7 +34,6 @@ struct globals_const {
     int 	imgHeight;
     float* 	imgData;	
 };
-
 
 //constants for GPU to access
 __constant__ globals_const cuConstParams;
@@ -60,6 +59,24 @@ __global__ void kernelClearImageSnowflake(){
 	*(float4*)(&cuConstParams.imgData[offset]) = value;
 }
 
+__global__ void kernelClearImage(float r, float g, float b, float a) {
+
+    int image_X = blockIdx.x * blockDim.x + threadIdx.x;
+    int image_Y = blockIdx.y * blockDim.y + threadIdx.y;
+
+    int width 	= cuConstParams.imgWidth;
+    int height 	= cuConstParams.imgHeight;
+
+    if (image_X >= width || image_Y >= height)
+        return;
+
+    int offset = 4 * (imageY * width + imageX);
+    float4 value = make_float4(r, g, b, a);
+
+    //Writing it to GPU memory
+    *(float4*)(&cuConstParams.imgData[offset]) = value;
+}
+
 Cuda_renderer::Cuda_renderer() {
     image = NULL;
 
@@ -83,7 +100,6 @@ void Cuda_renderer::allocImageBuf(int width, int height){
 			delete image;
 		}
 		image = new Image(width,height);
-
 }
 static void genRandomCircle(  int 		numCircles,
 							  float*	position,
@@ -151,6 +167,7 @@ void Cuda_renderer::clearImage(){
 		kernelClearImageSnowflake<<<gridDim, blockDim>>>();
 	}else{
 		//KernelClearImage call
+		kernelClearImage<<<gridDim, blockDim>>>(1.f, 1.f, 1.f, 1.f);
 	}
 	cudaThreadSynchronize();
 }
