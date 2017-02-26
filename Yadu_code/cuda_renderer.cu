@@ -7,10 +7,11 @@
 #include <cuda_runtime.h>
 #include <driver_functions.h>
 
-#include "cudaRenderer.h"
+#include "cuda_renderer.h"
 #include "image.h"
 
-struct globals_const{
+struct globals_const {
+
     SceneName sceneName;
 
     int 	numCircles;
@@ -22,7 +23,7 @@ struct globals_const{
     int 	imgWidth;
     int 	imgHeight;
     float* 	imgData;	
-}
+};
 
 //constants for GPU to access
 __constant__ globals_const cuConstParams;
@@ -30,8 +31,8 @@ __constant__ globals_const cuConstParams;
 //Clearing the image to initial snowflakes setting
 __global__ void kernelClearImageSnowflake(){
 	
-	int image_X = blockId.x * blockDim.x + threadIdx.x;
-	int image_Y = blockId.y * blockDim.y + threadIdx.y;
+	int image_X = blockIdx.x * blockDim.x + threadIdx.x;
+	int image_Y = blockIdx.y * blockDim.y + threadIdx.y;
 
 	int width 	= cuConstParams.imgWidth;
 	int height 	= cuConstParams.imgHeight;
