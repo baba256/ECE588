@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <getopt.h>
 #include <string>
-
+//#include "render_circle.h"
 #include "cuda_renderer.h"
 
 int main(int argc, char** argv)
@@ -15,8 +15,9 @@ int main(int argc, char** argv)
 	SceneName 		sceneName;
 	
 	if (optind >= argc) {
-        printf(stderr, "Error: missing scene name\n");
-        usage(argv[0]);
+       // printf(stderr, "Error: missing scene name\n");
+		printf( "Error: missing scene name\n");
+      //  usage(argv[0]);
         return 1;
     }
 	
@@ -39,13 +40,15 @@ int main(int argc, char** argv)
 	printf("Rendering to %d x %d image\n", imageSize, imageSize);
 	
 
-	render_circle* cuda_render;
+	Render_circle* cuda_render;
 	
-	cuda_render = new cuda_renderer();
+	cuda_render = new Cuda_renderer();
 	
-	cuda_render->allocImageBuf(imageSize, imageSize);
-    cuda_render->loadScene(sceneName);
-    cuda_render->setup();
+   cuda_render->allocImageBuf(imageSize, imageSize);
+   cuda_render->loadScene(sceneName);
+
+   cuda_render->clearImage();
+   cuda_render->setup();
 	
 	return 0;
 }
