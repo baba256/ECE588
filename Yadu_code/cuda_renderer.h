@@ -1,6 +1,6 @@
 #include "render_circle.h"
 
-class cuda_renderer : public render_circle{
+class Cuda_renderer : public render_circle{
 	
 private:
 
@@ -20,7 +20,7 @@ private:
     float* cudaDeviceImageData;
 
 public:
-		cuda_renderer();
+		Cuda_renderer();
 		
 		void image_setup();
 		

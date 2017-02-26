@@ -8,7 +8,7 @@
 int main(int argc, char** argv)
 {
 	int benchMarkStart = -1;
-	int benchMark End  = -1;
+	int benchMarkEnd  = -1;
 	int imageSize = 768;
 	
 	std::string sceneNameStr;
