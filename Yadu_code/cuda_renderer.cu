@@ -64,6 +64,35 @@ Cuda_renderer::Cuda_renderer() {
     cudaDeviceImageData = NULL;
 }
 
+//Allocating buffer memory to the image.
+void Cuda_renderer::allocImageBuf(int width, int height{
+		
+		if(image){
+			delete image;
+		}
+		image = new Image(width,height);
+)
+
+//Loading the scene
+void Cuda_renderer::loadScene(SceneName scene){
+	sceneName = scene;
+	
+	if(sceneName == SNOWFLAKES){
+		//Write an algorithm
+	}
+}
+
+static void genRandomCircle(  int 		numCircles,
+							  float*	position,
+							  float*	velocity,
+							  float*	color,
+							  float*	radius){
+
+		srand(0);
+		std::vector<float> depths()
+								  
+}
+
 //Clearing image for the renderer
 void Cuda_renderer::clearImage(){
 	

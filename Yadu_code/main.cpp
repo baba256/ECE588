@@ -38,7 +38,7 @@ int main(int argc, char** argv)
 	
 	cuda_render = new cuda_renderer();
 	
-	cuda_render->allocOutputImage(imageSize, imageSize);
+	cuda_render->allocImageBuf(imageSize, imageSize);
     cuda_render->loadScene(sceneName);
     cuda_render->setup();
 	
