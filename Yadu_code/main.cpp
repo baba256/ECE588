@@ -49,6 +49,9 @@ int main(int argc, char** argv)
 
    //cuda_render->clearImage();
    cuda_render->setup();
+
+   //glutInit(&argc, argv);
+  //startRendererWithDisplay(renderer);
 	
 	return 0;
 }

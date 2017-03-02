@@ -134,9 +134,9 @@ void Cuda_renderer::setup(){
 	cudaError_t err = cudaGetDeviceCount(&deviceCount);
 	
 	printf("Initializing CUDA for CudaRenderer\n");
-	printf("Found %d Cuda devices\n",deviceCount);
+	printf("Found %d Cuda device(s)\n",deviceCount);
 	
-	for(int i=0,i<deviceCount;i++){
+	for(int i=0;i<deviceCount;i++){
 		cudaDeviceProp deviceProps;
 		cudaGetDeviceProperties (&deviceProps,i);
 		printf("Device %d: %s\n", i, deviceProps.name);
@@ -158,15 +158,15 @@ void Cuda_renderer::setup(){
 	globals_const params;
     params.sceneName 	= sceneName;
     params.numCircles 	= numCircles;
-    params.imageWidth 	= image->width;
-    params.imageHeight 	= image->height;
+    params.imgWidth 	= image->width;
+    params.imgHeight 	= image->height;
     params.position 	= cudaDevicePosition;
     params.velocity 	= cudaDeviceVelocity;
     params.color 		= cudaDeviceColor;
     params.radius 		= cudaDeviceRadius;
-    params.imageData 	= cudaDeviceImageData;	
+    params.imgData 	= cudaDeviceImageData;
 	
-	cudaMemcpyHostToSymbol(cuConstParams, &params, sizeof(globals_const);
+	cudaMemcpyToSymbol(cuConstParams, &params, sizeof(globals_const));
 }
 void pixel_shader() {}
 
