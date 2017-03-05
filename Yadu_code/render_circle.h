@@ -1,3 +1,6 @@
+#ifndef __RENDER_CIRCLE_H__
+#define __RENDER_CIRCLE_H__
+
 struct Image;
 
 typedef enum {
@@ -22,3 +25,5 @@ public:
 
 	virtual void setup() = 0;
 };
+
+#endif

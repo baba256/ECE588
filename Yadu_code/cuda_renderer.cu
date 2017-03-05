@@ -155,7 +155,7 @@ void Cuda_renderer::setup(){
     cudaMemcpy(cudaDeviceColor	  , color	, sizeof(float) * 3 * numCircles, cudaMemcpyHostToDevice);
     cudaMemcpy(cudaDeviceRadius   , radius	, sizeof(float) * numCircles	, cudaMemcpyHostToDevice);	
 	
-	globals_const params;
+	 globals_const params;
     params.sceneName 	= sceneName;
     params.numCircles 	= numCircles;
     params.imgWidth 	= image->width;
