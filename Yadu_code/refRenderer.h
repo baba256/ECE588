@@ -1,6 +1,8 @@
 #include "render_circle.h"
 
-class RefRenderer : public CircleRenderer {
+
+class RefRenderer : public Render_circle {
+
 
 private:
 
@@ -23,16 +25,20 @@ public:
 
     void loadScene(SceneName name);
 
-    void allocOutputImage(int width, int height);
+
+    void allocImageBuf(int width, int height);
+
 
     void clearImage();
 
     void render();
 
-    void dumpParticles(const char* filename);
+
 
 	void pixel_shader( int Index,
 					   float pixelx, float pixely,
 					   float p_x,float p_y, float p_z,
 					   float* pixelData);
+
 };
+
