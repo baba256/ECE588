@@ -7,6 +7,7 @@
 #include "image.h"
 #include "util.h"
 
+
 // randomFloat --
 // //
 // // return a random floating point value between 0 and 1
@@ -14,7 +15,6 @@ static float
 randomFloat() {
     return static_cast<float>(rand()) / RAND_MAX;
 }
-
 
 RefRenderer::RefRenderer() {
     image = NULL;
@@ -34,7 +34,9 @@ void RefRenderer::setup() {
     //No setup required as we are running serially
 }
 
+
 void RefRenderer::allocImageBuf(int width, int height) {
+
 
     if (image)
         delete image;
@@ -85,7 +87,9 @@ void RefRenderer::loadScene(SceneName scene) {
 	if(sceneName == SNOWFLAKES){
 		//Write an algorithm
 	} else if (sceneName == CIRCLE_Rand){
+
 		numCircles 	= 11 * 100;
+
 		
 		position 	= new float[3 * numCircles];
 		velocity	= new float[3 * numCircles];
@@ -101,6 +105,7 @@ void RefRenderer::loadScene(SceneName scene) {
 
 //Shading the pixels
 void RefRenderer::pixel_shader(int circleIndex, float pixelCenterX, float pixelCenterY, float px, float py, float pz, float* pixelData)
+
 {
 	float diffX = px - pixelCenterX;
     float diffY = py - pixelCenterY;
@@ -131,10 +136,12 @@ void RefRenderer::pixel_shader(int circleIndex, float pixelCenterX, float pixelC
 	
 //Rendering the image
 void RefRenderer::render() {
+
 	  printf("start of RefRenderer::render()\n");
     // render all circles
 
 	  printf("num of circles =  %d \n",numCircles);
+
     for (int circleIndex=0; circleIndex<numCircles; circleIndex++) {
 
         int index3 = 3 * circleIndex;
@@ -151,7 +158,7 @@ void RefRenderer::render() {
         float maxY = py + rad;
 
         // convert normalized coordinate bounds to integer screen
-        // pixel bounds.
+
         int screenMinX = CLAMP(static_cast<int>(minX * image->width), 0, image->width);
         int screenMaxX = CLAMP(static_cast<int>(maxX * image->width)+1, 0, image->width);
         int screenMinY = CLAMP(static_cast<int>(minY * image->height), 0, image->height);
@@ -159,7 +166,7 @@ void RefRenderer::render() {
 
         float invWidth = 1.f / image->width;
         float invHeight = 1.f / image->height;
-  	  printf("nmiddle \n");
+
         // for each pixel in the box, the corresponding pixel on screen is determined.
         for (int pixelY=screenMinY; pixelY<screenMaxY; pixelY++) {
 
@@ -178,10 +185,4 @@ void RefRenderer::render() {
         }
     }
 }
-
-
-
-
-
-
 
