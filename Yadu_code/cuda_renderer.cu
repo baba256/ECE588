@@ -3,13 +3,45 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <vector>
+#include "vector_types.h"
 
 #include <cuda.h>
 #include <cuda_runtime.h>
 #include <driver_functions.h>
 
+
 #include "cuda_renderer.h"
 #include "image.h"
+
+// Threads Per Block
+#define TPB_X 16
+#define TPB_Y 16
+#define TPB (TPB_X*TPB_Y)
+
+// Pixels Per Thread
+#define PPT_X 2
+#define PPT_Y 2
+#define PPT (PPT_X * PPT_Y)
+
+// Pixels Per Block
+#define PPB_X (PPT_X * TPB_X)
+#define PPB_Y (PPT_Y * TPB_Y)
+#define PPB (PPB_X * PPB_Y)
+
+// Circle Per Thread
+#define CIRCLES_PER_THREAD 32
+
+// Total circles affects certain region
+#define TOTAL 3500
+
+//#include "exclusiveScan.cu_inl"
+
+
+
+
+
+
+
 
 // Threads Per Block
 #define TPB_X 16
@@ -59,21 +91,14 @@ __constant__ globals_const cuConstParams;
 
 //Clearing the image to initial snowflakes setting
 //__global__ void kernelClearImageSnowflake(){
-//	
+
 //	int image_X = blockIdx.x * blockDim.x + threadIdx.x;
 //	int image_Y = blockIdx.y * blockDim.y + threadIdx.y;
 //
 //	int width 	= cuConstParams.imgWidth;
 //	int height 	= cuConstParams.imgHeight;
-//	
-//	if(image_X >= width || image_Y >= height){
-//		return;
-//	}
-//	
-//	int 	offset 	= 4* (image_Y * width + image_X);
-//	float	shader 	= 0.4f + 0.45f * static_cast<float>(height - image_Y) / height;
-//	float4 	value  	= make_float4(shader,shader,shader,1.f);
-//	
+
+
 //	//Writing it to GPU memory
 //	*(float4*)(&cuConstParams.imgData[offset]) = value;
 //}
@@ -96,11 +121,12 @@ __device__ __inline__ int circleInBoxConservative(
     }
 }
 
+/*
 __inline__ __device__ void sharedMemExclusiveScan(int threadIndex, uint* sInput, uint* sOutput, volatile uint* sScratch, uint size)
 {
     if (size > WARP_SIZE) {
 
-        uint idata = sInput[threadIndex];
+a = sInput[threadIndex];
 
         //Bottom-level inclusive warp scan
         uint warpResult = warpScanInclusive(threadIndex, idata, sScratch, WARP_SIZE);
@@ -133,6 +159,32 @@ __inline__ __device__ void sharedMemExclusiveScan(int threadIndex, uint* sInput,
         sOutput[threadIndex] = warpScanExclusive(threadIndex, idata, sScratch, size);
     }
 }
+*/
+__device__ __inline__ void pixel_shader(int circleIndex, float2 pixelCenter, float3 p, float4* imagePtr) {
+
+    float diffX = p.x - pixelCenter.x;
+    float diffY = p.y - pixelCenter.y;
+    float pixelDist = diffX * diffX + diffY * diffY;
+
+    float rad = cuConstParams.radius[circleIndex];;
+    float maxDist = rad * rad;
+
+    // circle does not contribute to the image
+    if (pixelDist > maxDist)
+        return;
+
+    float3 rgb;
+    float alpha;
+
+    // there is a non-zero contribution.  Now compute the shading value
+
+    // simple: each circle has an assigned color
+        int index3 = 3 * circleIndex;
+        rgb = *(float3*)&(cuConstParams.color[index3]);
+        alpha = .5f;
+
+    float oneMinusAlpha = 1.f - alpha;
+
 
 __device__ __inline__ void pixel_shader(int circleIndex, float2 pixelCenter, float3 p, float4* imagePtr) {
 
@@ -158,6 +210,7 @@ __device__ __inline__ void pixel_shader(int circleIndex, float2 pixelCenter, flo
         alpha = .5f;
 
     float oneMinusAlpha = 1.f - alpha;
+
 
     float4 existingColor = *imagePtr;
     float4 newColor;
@@ -188,96 +241,116 @@ __global__ void kernelClearImage(float r, float g, float b, float a) {
     *(float4*)(&cuConstParams.imgData[offset]) = value;
 }
 
+
+
+#include "exclusiveScan.cu_inl"
+
 __global__ void kernelRenderCircles(){
-	
+
+
 	int threadIndex = threadIdx.y * TPB_X + threadIdx.x;
 	__shared__ unsigned int circleOrder[TOTAL];
 	__shared__ unsigned int circleCount[TPB];
     __shared__ unsigned int circleIndex[TPB];
-	
+
 	short imageWidth 	= cuConstParams.imgWidth;
     short imageHeight 	= cuConstParams.imgHeight;
     float invWidth 		= 1.f / imageWidth;
     float invHeight 	= 1.f / imageHeight;
-	
+
 	//Computing Box for region
 	short regionMinX = PPB_X * blockIdx.x;
     short regionMaxX = PPB_X * (blockIdx.x + 1) - 1;
     short regionMinY = PPB_Y * blockIdx.y;
     short regionMaxY = PPB_Y * (blockIdx.y + 1) - 1;
 
-	//Normalizing 
+
 	float boxL = invWidth * regionMinX;
     float boxR = invWidth * regionMaxX;
     float boxB = invHeight * regionMinY;
     float boxT = invHeight * regionMaxY;
-	
+
+
 	//Finding the parameters of circles that affect the region
-	int numCircles 		 = cuConstParams.numCirclesl
+	int numCircles 		 = cuConstParams.numCircles;
 	int circlesPerThread = (numCircles + TPB - 1) / TPB;
 	int circleStart		 = threadIndex * circlesPerThread;
 	int circleEnd		 = circleStart + (circlesPerThread - 1);
-	
+
 	if(threadIndex == TPB - 1){
 		circleEnd = numCircles - 1;
 	}
-	
+	printf( "Render kernel line 240 \n");
 	//Allocating private thread
 	unsigned int privateCircleOrder[CIRCLES_PER_THREAD];
 	int privateCircleCount = 0;
-	
+
 	//Counting the circles in region
 	for(int i= circleStart; i<= circleEnd; i++){
 		int index3 = 3 * i;
 		//Current position and radius
-		float3 p = (float3*)(&cuConstParams.position[index3]);
+
+		float3 p = *(float3*)(&cuConstParams.position[index3]);
+
 		float  rad = cuConstParams.radius[i];
         if( circleInBoxConservative(p.x, p.y, rad, boxL, boxR, boxT, boxB) )
             privateCircleOrder[privateCircleCount++] = i;
 	}
-	
+
+	printf( "Render kernel line 254 \n");
+
 	//Total Final count has to be stored in Index
 	circleCount[threadIndex] = privateCircleCount;
 	//Syncing the Threads
 	__syncthreads();
-	
+
+
+	printf( "Render kernel line b4 shared mem scan \n");
+
 	//Performing scanning on circle Index
 	 sharedMemExclusiveScan(threadIndex, circleCount, circleIndex, circleOrder, TPB);
     __syncthreads();
-	
+
+    printf( "Render kernel line after shared mem scan \n");
+
 	// Use circleIndex array to store privateCircleOrder
     int total =  circleCount[TPB-1] + circleIndex[TPB-1];
     int privateIndex = circleIndex[threadIndex];
-	
+
+
 	for(int i = 0; i < privateCircleCount; i++) {
         circleOrder[privateIndex++] = privateCircleOrder[i];
     }
     __syncthreads();
-	
+
 	//Rendering the pixel in the region
 	//FIXME: Check this logic
     for(int i = 0; i < total; i++) {
         int index = circleOrder[i];
         int index3 = 3 * index;
-        
+
+
         // Read position
         float3 p = *(float3*)(&cuConstParams.position[index3]);
-        
+
         //for each pixel in this thread of this block
         for (int pindex = 0; pindex < PPT; pindex++) {
-            int pixelIndex = threadIndex + pindex * TPB;                
+            int pixelIndex = threadIndex + pindex * TPB;
+
             int pixelX = regionMinX + pixelIndex % PPB_X;
             int pixelY = regionMinY + pixelIndex / PPB_X;
             // read info of pixel
             float4* imgPtr = (float4*)(&cuConstParams.imgData[4 * (pixelY * imageWidth + pixelX)]);
-            float2 pixelCenterNorm = make_float2(invWidth * (static_cast<float>(pixelX) + 0.5f), 
+
+            float2 pixelCenterNorm = make_float2(invWidth * (static_cast<float>(pixelX) + 0.5f),
                                                  invHeight * (static_cast<float>(pixelY) + 0.5f));
             pixel_shader(index, pixelCenterNorm, p, imgPtr);
-        }   
-                        
+        }
+
     }
-	
-	
+
+
+
 }
 
 Cuda_renderer::Cuda_renderer() {
@@ -369,7 +442,7 @@ void Cuda_renderer::setup(){
 	
 	cudaMemcpyToSymbol(cuConstParams, &params, sizeof(globals_const));
 }
-void pixel_shader() {}
+
 
 static void genRandomCircle(  int 		numCircles,
 							  float*	position,
@@ -435,31 +508,10 @@ void Cuda_renderer::clearImage(){
 	);
 	
 	if(sceneName == SNOWFLAKES){
-		kernelClearImageSnowflake<<<gridDim, blockDim>>>();
+	//	kernelClearImageSnowflake<<<gridDim, blockDim>>>();
 	}else{
 		//KernelClearImage call
-		kernelClearImage<<<gridDim, blockDim>>>(1.f, 1.f, 1.f, 1.f);
+	//	kernelClearImage<<<gridDim, blockDim>>>(1.f, 1.f, 1.f, 1.f);
 	}
 	cudaThreadSynchronize();
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
