@@ -104,7 +104,6 @@ void RefRenderer::loadScene(SceneName scene) {
 
 
 //Shading the pixels
-
 void RefRenderer::pixel_shader(int circleIndex, float pixelCenterX, float pixelCenterY, float px, float py, float pz, float* pixelData)
 
 {
