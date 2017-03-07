@@ -187,9 +187,3 @@ void RefRenderer::render() {
     }
 }
 
-
-
-
-
-
-

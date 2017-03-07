@@ -22,6 +22,7 @@ int main(int argc, char** argv)
 	int benchMarkEnd  	= -1;
 	int imageSize 		= 768;
 
+
 	std::string 	sceneNameStr;
 	std::string 	frameFilename;
 	SceneName 		sceneName;
@@ -66,9 +67,10 @@ int main(int argc, char** argv)
 	ref_renderer = new RefRenderer();
 
 	//Initializing to render using CPU
-   ref_renderer->allocImageBuf(imageSize,imageSize);
-   ref_renderer->loadScene(sceneName);
-   ref_renderer->setup();
+ //  ref_renderer->allocImageBuf(imageSize,imageSize);
+ //  ref_renderer->loadScene(sceneName);
+  // ref_renderer->setup();
+  // ref_renderer->render();
 
 
 
@@ -76,11 +78,12 @@ int main(int argc, char** argv)
    cuda_render->allocImageBuf(imageSize, imageSize);
    cuda_render->loadScene(sceneName);
    cuda_render->setup();
+   cuda_render->render();
 
 
    //Calling the timing check
-   //	Check_Render_timing_cuda(ref_renderer,cuda_render,0,1,frameFilename);
-   	Check_Render_timing_ref(ref_renderer,cuda_render,0,1,frameFilename);
+//   	Check_Render_timing_cuda(ref_renderer,cuda_render,0,1,frameFilename);
+ //  	Check_Render_timing_ref(ref_renderer,cuda_render,0,1,frameFilename);
 
 
 	return 0;
