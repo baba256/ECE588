@@ -17,3 +17,5 @@ https://github.com/cmu15418/assignment2
 
 
 http://15418.courses.cs.cmu.edu/spring2017/article/4
+
+http://docs.nvidia.com/cuda/pdf/CUDA_C_Programming_Guide.pdf
