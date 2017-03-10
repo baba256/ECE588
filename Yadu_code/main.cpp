@@ -62,20 +62,21 @@ int main(int argc, char** argv)
 
 
 	//Initializing to render using CPU
- //  ref_renderer->allocImageBuf(imageSize,imageSize);
- //  ref_renderer->loadScene(sceneName);
-  // ref_renderer->setup();
-  // ref_renderer->render();
+	ref_renderer->allocImageBuf(imageSize,imageSize);
+	ref_renderer->loadScene(sceneName);
+	ref_renderer->setup();
+	// ref_renderer->render();
 
 	//Initializing to render using GPU
-   cuda_render->allocImageBuf(imageSize, imageSize);
-   cuda_render->loadScene(sceneName);
-   cuda_render->setup();
-   cuda_render->render();
+	cuda_render->allocImageBuf(imageSize, imageSize);
+	cuda_render->loadScene(sceneName);
+	cuda_render->setup();
+	//  cuda_render->clearImage();
+	//cuda_render->render();
 
-   //Calling the timing check
-//   	Check_Render_timing_cuda(ref_renderer,cuda_render,0,1,frameFilename);
- //  	Check_Render_timing_ref(ref_renderer,cuda_render,0,1,frameFilename);
+	//Calling the timing check
+	Check_Render_timing_cuda(ref_renderer,cuda_render,0,1,frameFilename);
+	Check_Render_timing_ref(ref_renderer,cuda_render,0,1,frameFilename);
 
 	return 0;
 }

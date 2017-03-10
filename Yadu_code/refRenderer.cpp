@@ -6,7 +6,7 @@
 #include "refRenderer.h"
 #include "image.h"
 #include "util.h"
-
+#include "functional"
 
 // randomFloat --
 // //
@@ -24,6 +24,20 @@ RefRenderer::RefRenderer() {
     velocity = NULL;
     color = NULL;
     radius = NULL;
+}
+
+RefRenderer::~RefRenderer() {
+
+    if (image) {
+        delete image;
+    }
+
+    if (position) {
+        delete [] position;
+        delete [] velocity;
+        delete [] color;
+        delete [] radius;
+    }
 }
 
 const Image* RefRenderer::image_setup() {
@@ -55,12 +69,44 @@ static void genRandomCircle(  int 		numCircles,
 							  float*	color,
 							  float*	radius){
 
+
+/*
+	srand(0);
+	std::vector<float> depths(numCircles);
+	for(int i=0;i<numCircles;i++){
+		depths[i] = randomFloat();
+	}
+
+	std::sort(depths.begin(), depths.end(),  std::greater<float>());
+	for (int i=0; i<numCircles; i++) {
+
+		float depth = depths[i];
+
+		radius[i]	= 0.2f+ 0.6f * randomFloat();
+
+		int index3 = 3*i;
+
+		position[index3]  	= randomFloat();
+		position[index3+1]	= randomFloat();
+		position[index3+2]	= depth;
+
+		if(numCircles <= 1000){
+			color[index3] 	= .1f + .9f * randomFloat();
+			color[index3+1] = .2f + .5f * randomFloat();
+			color[index3+2] = .5f + .5f * randomFloat();
+		}else{
+			color[index3] 	= .3f + .9f * randomFloat();
+			color[index3+1] = .1f + .9f * randomFloat();
+			color[index3+2] = .1f + .4f * randomFloat();
+		}
+	}
+*/
 		srand(0);
 		std::vector<float> depths(numCircles);
 		for(int i=0;i<numCircles;i++){
 			
 			float depth = depths[i];
-			radius[i]	= 0.2f+ 0.6f * randomFloat();
+			radius[i]	= 0.02f+ 0.06f * randomFloat();
 			
 			int index3 = 3*i;
 			
@@ -68,7 +114,7 @@ static void genRandomCircle(  int 		numCircles,
 			position[index3+1]	= randomFloat();
 			position[index3+2]	= depth;
 			
-			if(numCircles <= 1000){
+			if(numCircles <= 100){
 				color[index3] 	= .1f + .9f * randomFloat();
 				color[index3+1] = .2f + .5f * randomFloat();
 				color[index3+2] = .5f + .5f * randomFloat();
@@ -78,7 +124,7 @@ static void genRandomCircle(  int 		numCircles,
 				color[index3+2] = .1f + .4f * randomFloat();
 			}
 		}
-								  
+			//*/
 }
 
 void RefRenderer::loadScene(SceneName scene) {
@@ -88,7 +134,7 @@ void RefRenderer::loadScene(SceneName scene) {
 		//Write an algorithm
 	} else if (sceneName == CIRCLE_Rand){
 
-		numCircles 	= 11 * 100;
+		numCircles 	= 10 * 100;
 
 		
 		position 	= new float[3 * numCircles];
