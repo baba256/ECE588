@@ -1,9 +1,11 @@
 //This file is only for seeing the timings
 #include <string>
 #include <math.h>
+
 #include <stdio.h>
 #include "render_circle.h"
 #include "cycleTimer.h"
+
 #include "image.h"
 #include "ppm.h"
 
@@ -131,4 +133,5 @@ void Check_Render_timing_ref(Render_circle* ref_renderer, Render_circle* cuda_re
 	printf("\n");
 	printf("Overall:  %.4f sec (note units are seconds)\n", totalTime);
 }
+
 
