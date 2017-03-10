@@ -21,7 +21,7 @@ private:
 
 public:
 		Cuda_renderer();
-	//	virtual ~cuda_renderer();
+		virtual ~Cuda_renderer();
 		void loadScene(SceneName name) ;
 		
 		const Image* image_setup();

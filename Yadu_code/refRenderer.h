@@ -18,7 +18,7 @@ private:
 public:
 
     RefRenderer();
-
+    virtual ~RefRenderer();
     const Image* image_setup();
 
     void setup();

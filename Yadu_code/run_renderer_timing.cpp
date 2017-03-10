@@ -37,6 +37,7 @@ void Check_Render_timing_cuda(Render_circle* ref_renderer, Render_circle* cuda_r
 		double endClearTime = CycleTimer::currentSeconds();
 
 		double startRenderTime = CycleTimer::currentSeconds();
+		//ref_renderer->render();
 		cuda_renderer->render();
 		double endRenderTime = CycleTimer::currentSeconds();
 
@@ -45,7 +46,7 @@ void Check_Render_timing_cuda(Render_circle* ref_renderer, Render_circle* cuda_r
 			if (dumpFrames) {
 				printf("Dumping frames\n");
 				char filename[1024];
-				sprintf(filename, "%s_%04d.ppm", frameFilename.c_str(), frame);
+				sprintf(filename, "%s_%04d.cuda_ppm", frameFilename.c_str(), frame);
 				writePPMImage(cuda_renderer->image_setup(), filename);
 
 			}
@@ -106,7 +107,7 @@ void Check_Render_timing_ref(Render_circle* ref_renderer, Render_circle* cuda_re
 			if (dumpFrames) {
 				printf("Dumping frames\n");
 				char filename[1024];
-				sprintf(filename, "%s_%04d.ppm", frameFilename.c_str(), frame);
+				sprintf(filename, "%s_%04d.ref_ppm", frameFilename.c_str(), frame);
 				writePPMImage(ref_renderer->image_setup(), filename);
 
 			}
