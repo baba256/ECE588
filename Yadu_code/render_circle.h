@@ -13,6 +13,7 @@ class Render_circle {
 	
 public:
 	
+	virtual ~Render_circle() { };
 	virtual const Image* image_setup()=0;
 	
 	virtual void allocImageBuf(int width, int height)=0;
