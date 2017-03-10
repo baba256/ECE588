@@ -202,7 +202,6 @@ __global__ void kernelClearImage(float r, float g, float b, float a) {
 	*(float4*)(&cuConstParams.imgData[offset]) = value;
 }
 
-/*
 
 #include "circleBoxTest.cu_inl"
 #include "exclusiveScan.cu_inl"
@@ -303,7 +302,7 @@ __global__ void kernelRenderCircles(){
 
 
 }
-*/
+
 __device__ __inline__ void
 shadePixel(int circleIndex, float2 pixelCenter, float3 p, float4* imagePtr) {
 
@@ -343,7 +342,7 @@ shadePixel(int circleIndex, float2 pixelCenter, float3 p, float4* imagePtr) {
 	// END SHOULD-BE-ATOMIC REGION
 }
 
-
+/*
 __global__ void kernelRenderCircles() {
 
 	int index = blockIdx.x * blockDim.x + threadIdx.x;
@@ -386,7 +385,7 @@ __global__ void kernelRenderCircles() {
 		}
 	}
 }
-
+*/
 
 Cuda_renderer::Cuda_renderer() {
 
@@ -449,14 +448,14 @@ void Cuda_renderer::allocImageBuf(int width, int height){
 
 void Cuda_renderer::render() {
 	// 256 threads per block is a healthy number
-	//dim3 blockDim(TPB_X, TPB_Y, 1);
-	//dim3 gridDim(
-	//		(image->width + PPB_X - 1) / PPB_X,
-	//		(image->height + PPB_Y - 1) / PPB_Y);
+	dim3 blockDim(TPB_X, TPB_Y, 1);
+	dim3 gridDim(
+			(image->width + PPB_X - 1) / PPB_X,
+			(image->height + PPB_Y - 1) / PPB_Y);
 
     // 256 threads per block is a healthy number
-    dim3 blockDim(256, 1);
-    dim3 gridDim((numCircles + blockDim.x - 1) / blockDim.x);
+   // dim3 blockDim(256, 1);
+  //  dim3 gridDim((numCircles + blockDim.x - 1) / blockDim.x);
 
 
 	printf ("b4 done bro \n");
