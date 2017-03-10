@@ -12,9 +12,7 @@ void Check_Render_timing_cuda(Render_circle* ref_renderer, Render_circle* cuda_r
 void Check_Render_timing_ref(Render_circle* ref_renderer, Render_circle* cuda_renderer,int benchmarkFrameStart, int totalFrames, const std::string& frameFilename);
 
 
-//This function is used to compare timings
-void Check_Render_timing(CircleRenderer* ref_renderer, CircleRenderer* cuda_renderer,
-                        int benchmarkFrameStart, int totalFrames, const std::string& frameFilename);
+
 						
 int main(int argc, char** argv)
 {
